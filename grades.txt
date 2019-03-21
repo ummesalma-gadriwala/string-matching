@@ -1,0 +1,4 @@
+Project Plan 3/3:
+The plan should be more precise: what implementation languag do you intend to
+use (and why), what input strings and patterns do you intend to use for
+measuring?
