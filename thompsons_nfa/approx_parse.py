@@ -18,7 +18,19 @@ class ApproximateNFA:
         n = len(s) 
         approxNFA = [self.nfa] * n
         for i in range(n):
-            pass
+            goStart = approxNFA[i]
+            toStart = approxNFA[i+1]
+            
+            # add character transition
+            char = s[i]
+            if char in go.start.transitions.keys():
+                goStart.transitions[char] = [goStart.transitions[char], toStart]
+            else:
+                goStart.transitions[char] = toStart
+
+            # add epsilon transition
+            
+            
             
 
     def match(self, k, s):
