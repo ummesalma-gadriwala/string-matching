@@ -14,9 +14,12 @@ class ApproximateNFA:
         
     def approximateNFA(self, s):
         n = len(s)
-        # problem: nfas are duplicated, not copied!
-        approxNFA = [self.nfa] * (n+1)
-        nfaStates = [self.states] * (n+1)
+        
+        approxNFA = []
+        nfaStates = []
+        for i in range(n+1):
+            approxNFA.append(nfa.copy())
+            nfaStates.append(self.states[:])
 
         # TODO: make sure all nfas have states in same order
         # add deletion edges
@@ -29,8 +32,6 @@ class ApproximateNFA:
                     # is it an epsilon transition?
                     toState.epsilon.append(fromState)
                     
-
-        
         # add substitution edges
         for i in range(1,n+1):
             state = nfaStates[i]
@@ -43,7 +44,6 @@ class ApproximateNFA:
                         # is it a char transition?
                         fromState.transitions[char] = toState
 
-        # FROM HERE!
         # add epsilon start
         for i in range(n+1):
             nfa = approxNFA[i]
@@ -61,6 +61,7 @@ class ApproximateNFA:
         # approxNFA[0] is the complete NFA graph,
         # with end = end of last NFA in list
         approxNFA[0].end = approxNFA[-1].end
+
         return approxNFA[0]
            
     def match(self, k, s):

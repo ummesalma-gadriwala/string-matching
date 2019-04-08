@@ -105,19 +105,23 @@ class State:
 
     def copy(self):
         that = State(self.name)
-        that.epsilon = self.epsilon # copy list?
-        that.transitions = self.transitions # copy dictionary
+        that.epsilon = self.epsilon.copy() # copy list
+        that.transitions = self.transitions.copy() # copy dictionary
         that.is_end = self.is_end
-        that.parent = self.parent # copy list?
+        that.parent = self.parent.copy() # copy list
         return that
     
     def __str__(self):
         pretty_epsilon = ""
-        done = set()
+        for s in self.epsilon:
+            pretty_epsilon += s.name + ","
+        pretty_epsilon = "[" + pretty_epsilon[:-1] + "]"
         pretty_transitions = ""
         for c in self.transitions.keys():
-            pretty_transitions += "Transition: " + c + ", to state " + str(self.transitions[c])
-        return "Name: " + self.name + "; Transitions: (" + pretty_transitions + "); Epsilon transitions: (" + str(self.epsilon) + ')'
+            pretty_transitions += "Transition: " + c + " to " + self.transitions[c].name
+        
+            
+        return "Name: " + self.name + "; Transitions: {" + pretty_transitions + "}; Epsilon transitions: " + pretty_epsilon
     
 class NFA:
     def __init__(self, start, end):
@@ -127,10 +131,11 @@ class NFA:
         self.states = set()
 
     def copy(self):
+        # create a copy of self so that changes to self are not reflected in copy
         startCopy = self.start.copy()
         endCopy = self.end.copy()
         copyNFA = NFA(startCopy, endCopy)
-        copyNFA.states = endStates # copy set?
+        copyNFA.states = endStates.copy()
         return copyNFA
     
     def addstate(self, state, state_set): # add state + recursively add epsilon transitions
@@ -141,7 +146,11 @@ class NFA:
             self.addstate(eps, state_set)
 
     def __str__(self):
-        return "NFA Start State: " + str(self.start) + "; End State: " + str(self.end)
+        pretty_nfa = "NFA Start State: " + self.start.name + "; End State: " + self.end.name + "\n"
+        for s in self.states:
+            pretty_nfa += str(s) + "\n"
+        return pretty_nfa
+        
     
     def pretty_print(self):
         '''
