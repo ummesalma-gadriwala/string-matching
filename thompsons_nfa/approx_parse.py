@@ -18,28 +18,32 @@ class ApproximateNFA:
             for state in self.states:
                 nfaStates[i].append(state.copy(i))
 
-        # TODO: make sure all nfas have states in same order
         # add deletion edges
         for i in range(1,n+1):
             state = nfaStates[i]
             for t in range(len(state)):
                 toState = state[t]
-                if toState.epsilon != []:
+                if (not toState.is_end) and toState.epsilon == []:
                     fromState = nfaStates[i-1][t]
                     # is it an epsilon transition?
-                    toState.epsilon.append(fromState)
+                    fromState.epsilon.append(toState)
+                    print("adding deletion edge")
                     
         # add substitution edges
         for i in range(1,n+1):
-            state = nfaStates[i]
-            for j in range(1,len(state)):
-                toState = state[j]
-                if toState.epsilon != []:
-                    fromStates = toState.parent
+            currentStates = nfaStates[i]
+            previousStates = nfaStates[i-1]
+            for j in range(len(currentStates)):
+                toState = currentStates[j]
+                if len(toState.transitions) != 0: 
+                    fromStates = previousStates[j].parent
+                    for f in fromStates:
+                        print("f",f)
                     char = s[i-1] #??
                     for fromState in fromStates:
                         # is it a char transition?
                         fromState.transitions[char] = toState
+                        print("adding substitution edge", char, fromState.name, toState.name)
 
         # and states = all states in all NFAs in list
         flatten = lambda l: [item for sublist in l for item in sublist]

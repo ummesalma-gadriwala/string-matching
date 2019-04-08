@@ -25,6 +25,8 @@ def compile(p, debug = False):
     return nfa_stack.pop() 
 
 
-reg = compile("(a|b)a*", True)
+reg = compile("(a|b)a*")
 approx = ApproximateNFA(reg)
 app = approx.approximateNFA("ba")
+
+print(approx.pretty_states())

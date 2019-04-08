@@ -104,7 +104,7 @@ class State:
         self.parent = []
 
     def copy(self, i=None):
-        that = State(self.name+str(i))
+        that = State(self.name+"----"+str(i))
         that.epsilon = self.epsilon.copy() # copy list
         that.transitions = self.transitions.copy() # copy dictionary
         that.is_end = self.is_end
