@@ -103,8 +103,8 @@ class State:
         self.is_end = False
         self.parent = []
 
-    def copy(self):
-        that = State(self.name)
+    def copy(self, i=None):
+        that = State(self.name+str(i))
         that.epsilon = self.epsilon.copy() # copy list
         that.transitions = self.transitions.copy() # copy dictionary
         that.is_end = self.is_end
@@ -130,12 +130,12 @@ class NFA:
         end.is_end = True
         self.states = set()
 
-    def copy(self):
+    def copy(self, i=None):
         # create a copy of self so that changes to self are not reflected in copy
-        startCopy = self.start.copy()
-        endCopy = self.end.copy()
+        startCopy = self.start.copy(i)
+        endCopy = self.end.copy(i)
         copyNFA = NFA(startCopy, endCopy)
-        copyNFA.states = endStates.copy()
+        copyNFA.states = self.states.copy() # copy list
         return copyNFA
     
     def addstate(self, state, state_set): # add state + recursively add epsilon transitions

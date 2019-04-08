@@ -1,4 +1,5 @@
 from parse import Lexer, Parser, Token, State, NFA, Handler
+from approx_parse import *
 
 def compile(p, debug = False):
     
@@ -25,3 +26,5 @@ def compile(p, debug = False):
 
 
 reg = compile("(a|b)a*", True)
+approx = ApproximateNFA(reg)
+app = approx.approximateNFA("ba")

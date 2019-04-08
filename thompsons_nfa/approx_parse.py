@@ -1,9 +1,4 @@
 from parse import *
-
-class ApproximateState(State):
-    def __init__(self, name, counter, kind, pre):
-        State. __init__(self, name)
-        self.counter = counter
         
 class ApproximateNFA:
     def __init__(self, nfa):
@@ -18,8 +13,10 @@ class ApproximateNFA:
         approxNFA = []
         nfaStates = []
         for i in range(n+1):
-            approxNFA.append(nfa.copy())
-            nfaStates.append(self.states[:])
+            approxNFA.append(self.nfa.copy(i))
+            nfaStates.append([])
+            for state in self.states:
+                nfaStates[i].append(state.copy(i))
 
         # TODO: make sure all nfas have states in same order
         # add deletion edges
@@ -38,18 +35,23 @@ class ApproximateNFA:
             for j in range(1,len(state)):
                 toState = state[j]
                 if toState.epsilon != []:
-                    fromStates = nfaStates[i-1].parent
-                    char = s[i]
+                    fromStates = toState.parent
+                    char = s[i-1] #??
                     for fromState in fromStates:
                         # is it a char transition?
                         fromState.transitions[char] = toState
 
+        # and states = all states in all NFAs in list
+        flatten = lambda l: [item for sublist in l for item in sublist]
+        nfaStates = flatten(nfaStates)
+        
         # add epsilon start
         for i in range(n+1):
             nfa = approxNFA[i]
-            state = State("epsilon")
+            state = State("epsilon"+str(i))
             state.epsilon = [nfa.start]
             nfa.start = state
+            nfaStates.append(state)
 
         # add character transition
         for i in range(n):
@@ -58,12 +60,23 @@ class ApproximateNFA:
             char = s[i]
             fromStart.transitions[char] = toStart
 
+        self.states = nfaStates
+        
         # approxNFA[0] is the complete NFA graph,
         # with end = end of last NFA in list
         approxNFA[0].end = approxNFA[-1].end
+        # and states = all states in all NFAs in list
+        approxNFA[0].states = set(nfaStates)
 
         return approxNFA[0]
-           
+
+    def pretty_states(self):
+        string = "\n"
+        for s in self.states:
+            string += str(s) + "\n"
+
+        return string
+    
     def match(self, k, s):
         approxNFA = approximateNFA(s)
         # perform a BFS on the NFA
