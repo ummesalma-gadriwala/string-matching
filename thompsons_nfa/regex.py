@@ -24,4 +24,5 @@ def compile(p, debug = False):
     return nfa_stack.pop() 
 
 
-reg = compile("a*b", True)
+reg = compile("(a|b)a*", True)
+# s1 -b-> s2 -epsilon-> s3 -a-> s4
