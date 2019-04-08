@@ -25,4 +25,3 @@ def compile(p, debug = False):
 
 
 reg = compile("(a|b)a*", True)
-# s1 -b-> s2 -epsilon-> s3 -a-> s4

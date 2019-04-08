@@ -101,7 +101,16 @@ class State:
         self.transitions = {} # char : state
         self.name = name
         self.is_end = False
-        
+        self.parent = []
+
+    def copy(self):
+        that = State(self.name)
+        that.epsilon = self.epsilon # copy list?
+        that.transitions = self.transitions # copy dictionary
+        that.is_end = self.is_end
+        that.parent = self.parent # copy list?
+        return that
+    
     def __str__(self):
         pretty_epsilon = ""
         done = set()
@@ -115,6 +124,14 @@ class NFA:
         self.start = start
         self.end = end # start and end states
         end.is_end = True
+        self.states = set()
+
+    def copy(self):
+        startCopy = self.start.copy()
+        endCopy = self.end.copy()
+        copyNFA = NFA(startCopy, endCopy)
+        copyNFA.states = endStates # copy set?
+        return copyNFA
     
     def addstate(self, state, state_set): # add state + recursively add epsilon transitions
         if state in state_set:
@@ -166,7 +183,10 @@ class Handler:
         s0 = self.create_state()
         s1 = self.create_state()
         s0.transitions[t.value] = s1
+        s1.parent.append(s0) # add parent
         nfa = NFA(s0, s1)
+        nfa.states.add(s0) # add to states
+        nfa.states.add(s1) # add to states
         nfa_stack.append(nfa)
     
     def handle_concat(self, t, nfa_stack):
@@ -174,7 +194,9 @@ class Handler:
         n1 = nfa_stack.pop()
         n1.end.is_end = False
         n1.end.epsilon.append(n2.start)
+        n2.start.parent.append(n1.end) # add parent
         nfa = NFA(n1.start, n2.end)
+        nfa.states = nfa.states.union(n1.states, n2.states) # add to states
         nfa_stack.append(nfa)
     
     def handle_alt(self, t, nfa_stack):
@@ -182,12 +204,19 @@ class Handler:
         n1 = nfa_stack.pop()
         s0 = self.create_state()
         s0.epsilon = [n1.start, n2.start]
+        n1.start.parent.append(s0) # add parent
+        n2.start.parent.append(s0) # add parent
         s3 = self.create_state()
         n1.end.epsilon.append(s3)
         n2.end.epsilon.append(s3)
+        s3.parent.append(n1.end) # add parent
+        s3.parent.append(n2.end) # add parent
         n1.end.is_end = False
         n2.end.is_end = False
         nfa = NFA(s0, s3)
+        nfa.states.add(s0) # add states
+        nfa.states.add(s3) # add states
+        nfa.states = nfa.states.union(n1.states, n2.states) # add states
         nfa_stack.append(nfa)
     
     def handle_rep(self, t, nfa_stack):
@@ -195,15 +224,23 @@ class Handler:
         s0 = self.create_state()
         s1 = self.create_state()
         s0.epsilon = [n1.start]
+        n1.start.parent.append(s0) # add parent
         if t.name == 'STAR':
             s0.epsilon.append(s1)
+            s1.parent.append(s0) # add parent
         n1.end.epsilon.extend([s1, n1.start])
+        n1.start.parent.append(n1.end) # add parent
+        s1.parent.append(n1.end) # add parent
         n1.end.is_end = False
         nfa = NFA(s0, s1)
+        nfa.states.add(s0) # add states
+        nfa.states.add(s1) # add states
+        nfa.states = nfa.states.union(n1.states) # add states
         nfa_stack.append(nfa)
 
     def handle_qmark(self, t, nfa_stack):
         n1 = nfa_stack.pop()
         n1.start.epsilon.append(n1.end)
+        n1.end.parent.append(n1.start) # add parent
         nfa_stack.append(n1)
 
