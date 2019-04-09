@@ -26,7 +26,8 @@ def compile(p, debug = False):
 
 
 reg = compile("(a|b)a*")
-approx = ApproximateNFA(reg)
-app = approx.approximateNFA("ba")
+print(reg.match("ba"))
+nfa = ApproximateNFA("(a|b)a*")
+app = nfa.approximateNFA("ba")
 
-print(approx.pretty_states())
+print(nfa.pretty_states())

@@ -1,4 +1,4 @@
-import pdb
+from copy import deepcopy
 
 class Token:
     def __init__(self, name, value):
@@ -38,12 +38,12 @@ exp      = term [|] exp      {push '|'}
          | term
          |                   empty?
 
-term     = factor term       chain {add \x08}
+term     = factor term       
          | factor
 
-factor   = primary [*]       star {push '*'}
-         | primary [+]       plus {push '+'}
-         | primary [?]       optional {push '?'}
+factor   = primary [*]       
+         | primary [+]
+         | primary [?]
          | primary
 
 primary  = \( exp \)
@@ -103,14 +103,6 @@ class State:
         self.is_end = False
         self.parent = []
 
-    def copy(self, i=None):
-        that = State(self.name+"----"+str(i))
-        that.epsilon = self.epsilon.copy() # copy list
-        that.transitions = self.transitions.copy() # copy dictionary
-        that.is_end = self.is_end
-        that.parent = self.parent.copy() # copy list
-        return that
-    
     def __str__(self):
         pretty_epsilon = ""
         for s in self.epsilon:
@@ -118,10 +110,17 @@ class State:
         pretty_epsilon = "[" + pretty_epsilon[:-1] + "]"
         pretty_transitions = ""
         for c in self.transitions.keys():
-            pretty_transitions += "Transition: " + c + " to " + self.transitions[c].name
-        
+            pretty_transitions += c + " to ["
             
-        return "Name: " + self.name + "; Transitions: {" + pretty_transitions + "}; Epsilon transitions: " + pretty_epsilon
+            for s in self.transitions[c]:
+                pretty_transitions += s.name + ", "
+            pretty_transitions = pretty_transitions[:-2] + "]"
+        pretty_parent = ""
+        for p in self.parent:
+            pretty_parent += p.name + ","
+        pretty_parent = "[" + pretty_parent[:-1] + "]"
+                    
+        return "Name: " + self.name + "; Transitions: {" + pretty_transitions + "}; Epsilon transitions: " + pretty_epsilon + "; Parent: " + pretty_parent
     
 class NFA:
     def __init__(self, start, end):
@@ -129,14 +128,6 @@ class NFA:
         self.end = end # start and end states
         end.is_end = True
         self.states = set()
-
-    def copy(self, i=None):
-        # create a copy of self so that changes to self are not reflected in copy
-        startCopy = self.start.copy(i)
-        endCopy = self.end.copy(i)
-        copyNFA = NFA(startCopy, endCopy)
-        copyNFA.states = self.states.copy() # copy list
-        return copyNFA
     
     def addstate(self, state, state_set): # add state + recursively add epsilon transitions
         if state in state_set:
@@ -152,13 +143,6 @@ class NFA:
         return pretty_nfa
         
     
-    def pretty_print(self):
-        '''
-        print using Graphviz
-        '''
-        
-        pass
-    
     def match(self,s):
         current_states = set()
         self.addstate(self.start, current_states)
@@ -167,7 +151,7 @@ class NFA:
             for state in current_states:
                 keys = state.transitions.keys()
                 if c in state.transitions.keys():
-                    trans_state = state.transitions[c]
+                    trans_state = state.transitions[c][0]
                     self.addstate(trans_state, next_states)
            
             current_states = next_states
@@ -191,7 +175,7 @@ class Handler:
     def handle_char(self, t, nfa_stack):
         s0 = self.create_state()
         s1 = self.create_state()
-        s0.transitions[t.value] = s1
+        s0.transitions[t.value] = [s1]
         s1.parent.append(s0) # add parent
         nfa = NFA(s0, s1)
         nfa.states.add(s0) # add to states
@@ -252,4 +236,3 @@ class Handler:
         n1.start.epsilon.append(n1.end)
         n1.end.parent.append(n1.start) # add parent
         nfa_stack.append(n1)
-
