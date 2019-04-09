@@ -218,6 +218,127 @@ class testRegex(unittest.TestCase):
         s = ""
         nfa = compile(r)
         self.assertFalse(nfa.match(s))
+
+        
+    ## @brief Test a more complex regexp with the | symbol and a 2-letter alphabet
+    #  @details A test with multiple options starting with the same character
+    def test_or5(self):
+        r = "a|b|bab|bb"
+        s = "bb"
+        nfa = compile(r)
+        self.assertTrue(nfa.match(s))
+
+        
+    ## @brief Test a more complex regexp with the | symbol, a 2-letter alphabet and a space
+    #  @details A test with multiple options starting with the same character, with a string that is a space only
+    def test_or6(self):
+        r = "a|b|bab|bb"
+        s = " "
+        nfa = compile(r)
+        self.assertFalse(nfa.match(s))
+
+    ''' -------------------------------------------------- '''
+    ''' Testing regex with the + symbol '''
+    
+    ## @brief Test a regexp with the + symbol and a 2-letter alphabet
+    #  @details The first character in the regexp contains a + only and the string matches the first half only
+    def test_plus1(self):
+        r = "a+b"
+        s = "a"
+        nfa = compile(r)
+        self.assertFalse(nfa.match(s))
+
+    ## @brief Test a regexp with the + symbol and a 2-letter alphabet
+    #  @details The first character in the regexp contains a + only and the string matches the second half only
+    def test_plus2(self):
+        r = "a+b"
+        s = "b"
+        nfa = compile(r)
+        self.assertFalse(nfa.match(s))
+
+    ## @brief Test a regexp with the + symbol and a 2-letter alphabet
+    #  @details The first character in the regexp contains a + only and the string matches the entire regexp
+    def test_plus3(self):
+        r = "a+b"
+        s = "aaaaaaab"
+        nfa = compile(r)
+        self.assertTrue(nfa.match(s))
+
+
+    ## @brief Test a regexp with the + symbol and a 2-letter alphabet: "many" case
+    #  @details Both characters contain a + symbol and the string matches the first half only
+    def test_plus4(self):
+        r = "a+b+"
+        s = "aaaaaaa"
+        nfa = compile(r)
+        self.assertFalse(nfa.match(s))
+
+    ## @brief Test a regexp with the + symbol and a 2-letter alphabet: "many" case
+    #  @details Both characters contain a + symbol and the string matches the second half only
+    def test_plus5(self):
+        r = "a+b+"
+        s = "bbbbbb"
+        nfa = compile(r)
+        self.assertFalse(nfa.match(s))
+
+    ## @brief Test a regexp with the + symbol and a 2-letter alphabet: "one of" case
+    #  @details Both characters contain a + symbol and the string matches the first half only
+    def test_plus6(self):
+        r = "a+b+"
+        s = "a"
+        nfa = compile(r)
+        self.assertFalse(nfa.match(s))
+
+    ## @brief Test a regexp with the + symbol and a 2-letter alphabet: "one of" case
+    #  @details Both characters contain a + symbol and the string matches the second half only
+    def test_plus7(self):
+        r = "a+b+"
+        s = "b"
+        nfa = compile(r)
+        self.assertFalse(nfa.match(s))
+    
+    ## @brief Test a regexp with the + symbol and a 2-letter alphabet: "no-value" case
+    #  @details Both characters contain a + symbol and the string is empty
+    def test_plus8(self):
+        r = "a+b+"
+        s = ""
+        nfa = compile(r)
+        self.assertFalse(nfa.match(s))
+
+    
+    ## @brief Test a more complex regexp with the + symbol and a 2-letter alphabet: "many" case
+    #  @details Alternating sequence of characters each with a + symbol, and the string matches exactly
+    def test_plus9(self):
+        r = "a+b+a+b+"
+        s = "aabbaaabbb"
+        nfa = compile(r)
+        self.assertTrue(nfa.match(s))
+
+    ## @brief Test a more complex regexp with the + symbol and a 2-letter alphabet: "one-of" and "none-of" case
+    #  @details Alternating sequence of characters each with a + symbol, and the string matches partly
+    def test_plus10(self):
+        r = "a+b+a+b+"
+        s = "a"
+        nfa = compile(r)
+        self.assertFalse(nfa.match(s))
+
+    ## @brief Test a more complex regexp with the + symbol and a 2-letter alphabet
+    #  @details Some characters have the + symbol and some do not. The string does not match.
+    def test_plus11(self):
+        r = "ba+b"
+        s = "aaaaa"
+        nfa = compile(r)
+        self.assertFalse(nfa.match(s))
+
+    
+    ## @brief Test a more complex regexp with the + symbol and a 2-letter alphabet
+    #  @details The plus symbol surrounds a sequence of characters.
+    def test_plus12(self):
+        r = "(ba+b)+"
+        s = "baaaaabbabbb"
+        nfa = compile(r)
+        self.assertFalse(nfa.match(s))
+
     
     
 
