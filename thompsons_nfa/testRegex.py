@@ -339,8 +339,39 @@ class testRegex(unittest.TestCase):
         nfa = compile(r)
         self.assertFalse(nfa.match(s))
 
-    
-    
+    ''' -------------------------------------------------- '''
+    ''' Testing regex with the ? symbol '''
+    ## @brief Test a regexp with the ? symbol and a 2-letter alphabet
+    #  @details The optional symbol associates with one character and the string includes it
+    def test_optional1(self):
+        r = "aa?b"
+        s = "aab"
+        nfa = compile(r)
+        self.assertTrue(nfa.match(s))
+        
+    ## @brief Test a regexp with the ? symbol and a 2-letter alphabet
+    #  @details The optional symbol associates with one character and the string does not include it
+    def test_optional2(self):
+        r = "aa?b"
+        s = "ab"
+        nfa = compile(r)
+        self.assertTrue(nfa.match(s))
+        
+    ## @brief Test a more complex regexp with the ? symbol and a 2-letter alphabet
+    #  @details The plus symbol surrounds a sequence of characters and the string includes it
+    def test_optional3(self):
+        r = "a(ab)?b"
+        s = "aabb"
+        nfa = compile(r)
+        self.assertTrue(nfa.match(s))
+
+    ## @brief Test a more complex regexp with the ? symbol and a 2-letter alphabet
+    #  @details The plus symbol surrounds a sequence of characters and the string does not include it
+    def test_optional4(self):
+        r = "a(ab)?b"
+        s = "ab"
+        nfa = compile(r)
+        self.assertTrue(nfa.match(s))
 
 if __name__ == '__main__':
     unittest.main()
