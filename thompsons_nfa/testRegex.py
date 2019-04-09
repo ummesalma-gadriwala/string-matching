@@ -83,6 +83,79 @@ class testRegex(unittest.TestCase):
         self.assertTrue(nfa.match(s))
 
 
+    ## @brief Test a regexp with the * symbol and a 2-letter alphabet: "many" case
+    #  @details Both characters contain a * symbol and the string matches the first half only
+    def test_star4(self):
+        r = "a*b*"
+        s = "aaaaaaa"
+        nfa = compile(r)
+        self.assertTrue(nfa.match(s))
+
+    ## @brief Test a regexp with the * symbol and a 2-letter alphabet: "many" case
+    #  @details Both characters contain a * symbol and the string matches the second half only
+    def test_star5(self):
+        r = "a*b*"
+        s = "bbbbbb"
+        nfa = compile(r)
+        self.assertTrue(nfa.match(s))
+
+    ## @brief Test a regexp with the * symbol and a 2-letter alphabet: "one of" case
+    #  @details Both characters contain a * symbol and the string matches the first half only
+    def test_star6(self):
+        r = "a*b*"
+        s = "a"
+        nfa = compile(r)
+        self.assertTrue(nfa.match(s))
+
+    ## @brief Test a regexp with the * symbol and a 2-letter alphabet: "one of" case
+    #  @details Both characters contain a * symbol and the string matches the second half only
+    def test_star7(self):
+        r = "a*b*"
+        s = "b"
+        nfa = compile(r)
+        self.assertTrue(nfa.match(s))
+    
+    ## @brief Test a regexp with the * symbol and a 2-letter alphabet: "no-value" case
+    #  @details Both characters contain a * symbol and the string is empty
+    def test_star8(self):
+        r = "a*b*"
+        s = ""
+        nfa = compile(r)
+        self.assertTrue(nfa.match(s))
+
+    
+    ## @brief Test a more complex regexp with the * symbol and a 2-letter alphabet: "many" case
+    #  @details Alternating sequence of characters each with a * symbol, and the string matches exactly
+    def test_star9(self):
+        r = "a*b*a*b*"
+        s = "aabbaaabbb"
+        nfa = compile(r)
+        self.assertTrue(nfa.match(s))
+
+    ## @brief Test a more complex regexp with the * symbol and a 2-letter alphabet: "one-of" and "none-of" case
+    #  @details Alternating sequence of characters each with a * symbol, and the string matches partly
+    def test_star10(self):
+        r = "a*b*a*b*"
+        s = "a"
+        nfa = compile(r)
+        self.assertTrue(nfa.match(s))
+
+    ## @brief Test a more complex regexp with the * symbol and a 2-letter alphabet
+    #  @details Some characters have the * symbol and some do not. The string does not match.
+    def test_star11(self):
+        r = "ba*b"
+        s = "aaaaa"
+        nfa = compile(r)
+        self.assertFalse(nfa.match(s))
+
+    
+    ## @brief Test a more complex regexp with the * symbol and a 2-letter alphabet
+    #  @details The star symbol surrounds a sequence of characters.
+    def test_star112(self):
+        r = "(ba*b)*"
+        s = "baaaaabbabbb"
+        nfa = compile(r)
+        self.assertTrue(nfa.match(s))
         
 
 if __name__ == '__main__':
