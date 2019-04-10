@@ -26,11 +26,11 @@ def compile(p, debug = False):
 
 
 reg = compile("(a|b)a*")
-print(reg.match("ba"))
+#print(reg.match("ba"))
 nfa = ApproximateNFA("(a|b)a*")
 app = nfa.approximateNFA("ba")
 
-print(nfa.pretty_states())
+#print(nfa.pretty_states())
 
 
 ##reg = compile("(a|b)a*")
@@ -40,7 +40,8 @@ start = app.start
 print("Start: ",start.name)
 end = app.end.name
 print("End: ",end)
-dictionary = approx.nfaTOdictionary(app)
+##dictionary = approx.nfaTOdictionary(app)
 #print(dictionary)
-lengthOfPath = breadth_first_search(dictionary, start)
+##lengthOfPath = breadth_first_search(dictionary, start)
+path = approx.match(0,"ba")
 #print("BFS on graph:", lengthOfPath)

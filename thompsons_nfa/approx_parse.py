@@ -1,5 +1,4 @@
 from parse import *
-from collections import deque
 
 class ApproximateNFA:
     def __init__(self, regex):
@@ -39,7 +38,7 @@ class ApproximateNFA:
                     fromState = nfaStates[i-1][t]
                     # is it an epsilon transition?
                     fromState.epsilon.append(toState)
-                    print("adding deletion edge")
+                    #print("adding deletion edge")
                     
         # add substitution edges
         for i in range(1,n+1):
@@ -56,7 +55,7 @@ class ApproximateNFA:
                         if char in fromState.transitions.keys():
                             fromState.transitions[char].append(toState)
                         else: fromState.transitions[char] = [toState]
-                        print("adding substitution edge", char, fromState.name, toState.name)
+                        #print("adding substitution edge", char, fromState.name, toState.name)
 
         # and states = all states in all NFAs in list
         flatten = lambda l: [item for sublist in l for item in sublist]
@@ -84,7 +83,6 @@ class ApproximateNFA:
         approxNFA[0].end = approxNFA[-1].end
         # and states = all states in all NFAs in list
         approxNFA[0].states = set(nfaStates)
-
         return approxNFA[0]
 
     def pretty_states(self):
@@ -95,10 +93,23 @@ class ApproximateNFA:
         return string
     
     def match(self, k, s):
-        approxNFA = approximateNFA(s)
+        app = self.approximateNFA(s)
+        #print(app)
+        dictionary = self.nfaTOdictionary(app)
         # perform a BFS on the NFA
+        lengthOfPath = breadth_first_search(dictionary, app.start)
+        endState = app.end
+        print(endState)
+        # length of path from start state to end state
+        endStatePathLength = lengthOfPath[endState]
+        print("Path Length:",endStatePathLength)
+        
         # if length of path from start state to end state is <= to k, then return true
+        if (endStatePathLength <= k):
+            return True
         # else return false
+        else:
+            return False
         
     def nfaTOdictionary(self, nfa):
         dictionary = {}
@@ -111,46 +122,33 @@ class ApproximateNFA:
             #for all neighbouring states
             for neighbour in state.transitions:
                 neighbour_state = state.transitions[neighbour]
-                for ns in range(0,len(neighbour_state)):
-                    #add it to the value for the parent as its key
-                    dictionary[state].append(neighbour_state[ns])
-                    #print("children:",neighbour_state[ns].name)
+                dictionary[state] = dictionary[state] + neighbour_state
 
-                # also add epsilon transitions
-                #print("EpsilonList:",state.epsilon)
-                dictionary[state].append(state.epsilon)
-
-        #print(dictionary)
+            # also add epsilon transitions
+            dictionary[state] = dictionary[state] + state.epsilon
+        
         return dictionary
-        #for key in dictionary:
-        #    print("Parent:"+key)
-         #   print("child:"+dictionary[key])
+        
 		 
 		 
 def breadth_first_search(graph, root):
+    import math
     distances = {}
+    marked = []
+    queue = set()
+    for state in graph:
+        distances[state] = math.inf
     distances[root] = 0
-    q = deque([root])
-    while q:
-        # The oldest seen (but not yet visited) node will be the left most one.
-        current = q.popleft() #state
-        #print("current:",current)
-        for neighbor in graph[current]:
-            if (isinstance(neighbor, list)):
-                #neighbour is a list of states
-                for state in range(0, len(neighbor)):
-                    if neighbor[state] not in distances:
-                        distances[neighbor[state]] = distances[current] + 1
-                        # When we see a new node, we add it to the right side of the queue.
-                        q.append(neighbor[state])
-            
-             #   print("neighbour:",neighbor[state]) 
-            else:
-                if neighbor not in distances:
-                    distances[neighbor] = distances[current] + 1
-                # When we see a new node, we add it to the right side of the queue.
-                    q.append(neighbor)
-
-    for state in distances:
-        print("state: ("+ state.name + "), Distance:" + str(distances[state]))
+    queue.add(root)
+    while len(queue) != 0:
+        current = queue.pop()
+        marked.append(current)
+        neighbours = graph[current]
+        for neighbour in neighbours:
+            if distances[neighbour] > (distances[current]+1):
+                distances[neighbour] = (distances[current]+1)
+            if neighbour not in marked:
+                queue.add(neighbour)
+    #for state in distances:
+       # print("stateNmae: ("+ state.name + "), Distance:" + str(distances[state]))
     return distances
