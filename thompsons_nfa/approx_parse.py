@@ -38,7 +38,6 @@ class ApproximateNFA:
                     fromState = nfaStates[i-1][t]
                     # is it an epsilon transition?
                     fromState.epsilon.append(toState)
-                    #print("adding deletion edge")
                     
         # add substitution edges
         for i in range(1,n+1):
@@ -55,7 +54,6 @@ class ApproximateNFA:
                         if char in fromState.transitions.keys():
                             fromState.transitions[char].append(toState)
                         else: fromState.transitions[char] = [toState]
-                        #print("adding substitution edge", char, fromState.name, toState.name)
 
         # and states = all states in all NFAs in list
         flatten = lambda l: [item for sublist in l for item in sublist]
@@ -94,7 +92,6 @@ class ApproximateNFA:
     
     def match(self, k, s):
         app = self.approximateNFA(s)
-        #print(app)
         dictionary = self.nfaTOdictionary(app)
         # perform a BFS on the NFA
         lengthOfPath = breadth_first_search(dictionary, app.start)
@@ -107,15 +104,12 @@ class ApproximateNFA:
         # if length of path from start state to end state is <= to k, then return true
         if (endStatePathLength <= k):
             return True
-        # else return false
-        else:
-            return False
+        return False
         
     def nfaTOdictionary(self, nfa):
         dictionary = {}
 
         for state in self.states:
-            #print("Parent:"+state.name)
             #for each state make an empty dictionary where states are the keys as they are unique
             dictionary[state] = []
 
@@ -129,8 +123,6 @@ class ApproximateNFA:
         
         return dictionary
         
-		 
-		 
 def breadth_first_search(graph, root):
     import math
     distances = {}
@@ -149,6 +141,4 @@ def breadth_first_search(graph, root):
                 distances[neighbour] = (distances[current]+1)
             if neighbour not in marked:
                 queue.add(neighbour)
-    #for state in distances:
-       # print("stateNmae: ("+ state.name + "), Distance:" + str(distances[state]))
     return distances
