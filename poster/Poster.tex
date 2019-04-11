@@ -30,7 +30,7 @@
 \setbeamertemplate{caption}[numbered]
 \setbeamertemplate{navigation symbols}{}
 
-\title{Approximate Regular Expressions: A Comparison of Exact and Approximate Matching Methods}
+\title{Approximate Regular Expressions: A Comparison of Exact and Approximate Matching Algorithms}
 \subtitle{}  
   \author[Gadriwala, Noshin \& Siddiqui]{Umme Salma Gadriwala, Tasnim Noshin, Rumsha Siddiqui \vspace{0.3cm} \newline \small \{gadriway, noshint, siddiqur\}@mcmaster.ca}
   \institute[McMaster University]{Department of Computing and Software, McMaster University
@@ -60,29 +60,37 @@ your thoughts: \\
 \begin{textblock}{7.25}(0.5,3.1)
 
 \begin{block}{Motivation}
+-different applications
 
 \end{block}
 
 \begin{block}{Problem}
-
+-when to use
+-can only implement approx?
 \end{block}
 
 \begin{block}{Solution}
-
+Implement algorithm and explore efficiency of Thompson's and Millers and Myers
 \end{block}
 
 
 \begin{block}{Background Study}
-
-\vspace{5mm} %5mm vertical space
-
-\textbf{Adversarial Samples:} Neural networks are vulnerable to adversarial samples. Small changes to the input vector can result in misleading activations and a final misclassification. This makes it difficult to apply neural networks in security-critical areas. Development of neural network defenses is a growing area of research. 
+\textbf{Exact Matching}:
 
 \begin{figure}
-\includegraphics[scale=2.6]{Panda1.PNG}
+\includegraphics[scale=1]{ThompsonsNFA.PNG}
 \end{figure}
 
 \vspace{5mm} %5mm vertical space
+
+
+
+\textbf{Approximate Matching}:
+
+
+\begin{figure}
+\includegraphics[scale=1]{MillerAndMyersAlgorithm.PNG}
+\end{figure}
 
 \end{block}
 \end{textblock}
@@ -90,30 +98,23 @@ your thoughts: \\
 
 \begin{textblock}{7.25}(8.25,3.1)
 \begin{block}{Methodology}
-In our proposed evaluation metric, we compare the accuracy of a given neural network's output of an untampered sample set to that of an adversarial sample set. For each adversarial attack, we plan to conduct the following:
-\begin{enumerate}
-\item Determine the accuracy of a given neural network on an untampered test set by identifying the percentage of outputs that are true positive (TP), false positive (FP), true negative (TN) and false negative (FN).
-\item Run an adversarial attack on the untampered test set to generate an adversarial sample set. Determine the accuracy of the neural net when running the adversarial sample set by identifying the percentage of outputs that are TP, FP, TN and FN.
-\item Report the difference in accuracy percentages between the adversarial and untampered test sets in a confusion matrix.
-\item Run a defense on the neural network. Determine the accuracy percentages of the defended neural net when inputting the adversarial sample set. 
-\item Report the difference in accuracy percentages between the defended and non-defended neural network when running the adversarial samples. 
-\end{enumerate}
 
-\begin{figure}
-\includegraphics[scale=2]{Table_colour_longer.png}
-\end{figure}
+explain what doing
 
-The reported percentages in each quadrant of the matrix can be used by deep learning developers to analyze potential changes in accuracy, sensitivity, specificity and precision. 
+graph
+
 \end{block}
 
 
 \begin{block}{Conclusions \& Future Work}
-The proposed metric allows us to evaluate the effects of various adversarial attacks and potential neural network robustness using known defences. In the next phase of our work, we will implement this metric to explore the vulnerabilities of neural networks using Keras and Tensorflow. We further hope to conduct a survey of deep learning researchers' perspectives on neural net verification to explore the sociological views of using deep learning models in security critical systems.
+final result
+
+future:other algos
 \end{block}
 
 
 \begin{block}{Acknowledgements}
-We thank Dr. R. Samavi and Yifan Ou for the opportunity and support in exploring security in deep learning machine models, and Dr. C. Anand for his continued support and guidance in our learning and endeavours.
+We thank Dr. Sekerinski for inspiring this project, as well as his continued guidance in our learning and endeavours. We also thank Spencer Park and Erin Varey for their invaluable feedback and support. 
 \end{block}
 
 %--------------------------------------------
