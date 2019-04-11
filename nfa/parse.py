@@ -30,7 +30,7 @@ class Lexer:
 class ParseError(Exception):pass
 
 '''
-Grammar for regex:
+Grammar:
 
 regex = exp $
 
