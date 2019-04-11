@@ -1,4 +1,5 @@
 from parse import *
+import math
 
 class ApproximateNFA:
     def __init__(self, regex):
@@ -108,7 +109,7 @@ class ApproximateNFA:
         return False
 
     def dijkstra(self, graph, root):
-        import math
+        
         numberOfNodes = len(graph.keys())
         distances = {}
         for state in graph:
@@ -117,8 +118,8 @@ class ApproximateNFA:
         visited = []
         
         while len(visited) != numberOfNodes:
-            # Pick the node with the smallest value in distances
-            current = min(distances, key=distances.get)
+            # Pick the unvisited node with the smallest value in distances
+            current = self.nextNode(distances, visited)
             # Add the node to visited
             visited.append(current)
             # Find the character transitions of the node
@@ -135,7 +136,16 @@ class ApproximateNFA:
                     
         print("distances",distances)
         return distances
-    
+
+    def nextNode(self, distances, visited):
+        minimum = math.inf
+        for state in distances:
+            if distances[state] < minimum and \
+               (state not in visited):
+                minimum = distances[state]
+                node = state
+        return node
+            
     def nfaTOdictionary(self, nfa):
         dictionary = {}
 
