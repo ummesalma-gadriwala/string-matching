@@ -2,3 +2,22 @@ Project Plan 3/3:
 The plan should be more precise: what implementation languag do you intend to
 use (and why), what input strings and patterns do you intend to use for
 measuring?
+
+Project Artifact Feedback:
+- poster is nice, but too much text to read; shorten and organize as bulleted,
+make more visual
+- try to explain how the algorithms work, which is a (the?) challenge
+- spell check, e.g. legnths
+- put units on the diagrams
+- acknowledgements are appreciated, however, if you are short on space, feel
+free to leave them out
+- the test string and test pattern look too simple: you may report separate
+results for different patterns and strings; justify why you chose the test
+strings and patterns (e.g. do you use some synthetic strings and patterns, do
+you use real logs or dna sequences, do you use patterns with choice or without
+choice and why, etc.)
+- Conclusions: are these in line with what other people reported?
+- Future work: either be specific or leave out
+- among the exact and approximate algorithms, discuss their differences and
+argue why you chose which
+- are you going to document everything in a Jupyter notebook or differently? 
