@@ -61,13 +61,15 @@
 \begin{textblock}{7.25}(0.5,3.1)
 
 \begin{block}{Motivation}
--different applications
-
+Applications of finding exact and approximate string matches range far and wide. In browsing, the find function is often employed to locate exact text snippets on a screen. In computer security, approximate matching is necessary to find computer viruses and spam signatures that resemble certain patterns. In bioinformatics, approximate matching is vital for comparing and contrasting DNA and protein sequences \cite{Approx1}. The length of sequences involved in these applications reach billions. Thus, efficient string matching algorithms are needed to preserve time and cost of resources.
 \end{block}
 
 \begin{block}{Problem}
--when to use
--can only implement approx?
+ Different applications have different constraints on how strict of a match must be found. Some applications require both exact and approximate matching features. This project explores whether or not an implementation of exact matching can be replaced with one of approximate matching, where the error value for an exact match request would be set to 0. We aim to determine how an approximate matching algorithm fares in efficiency when compared to an exact matching algorithm.  
+ %For ex: browser
+ 	% exact matching: ctrl-f to find text snippet
+ 	% approx. matching: allow for typos
+
 \end{block}
 
 \begin{block}{Solution}
