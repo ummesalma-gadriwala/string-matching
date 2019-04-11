@@ -30,6 +30,60 @@
 \setbeamertemplate{caption}[numbered]
 \setbeamertemplate{navigation symbols}{}
 
+% -----------------------------------------------------------------------------------------------------------------
+% For code snippet
+\usepackage[utf8]{inputenc}
+
+% Default fixed font does not support bold face
+\DeclareFixedFont{\ttb}{T1}{txtt}{bx}{n}{12} % for bold
+\DeclareFixedFont{\ttm}{T1}{txtt}{m}{n}{12}  % for normal
+
+% Custom colors
+\usepackage{color}
+\definecolor{deepblue}{rgb}{0,0,0.5}
+\definecolor{deepred}{rgb}{0.6,0,0}
+\definecolor{deepgreen}{rgb}{0,0.5,0}
+\usepackage{listings}
+
+% Python style for highlighting
+\newcommand\pythonstyle{\lstset{
+%language=Python,
+%basicstyle=\ttm,
+%otherkeywords={self},             % Add keywords here
+%keywordstyle=\ttb\color{deepblue},
+%emph={MyClass,__init__, for},          % Custom highlighting
+%emphstyle=\ttb\color{deepred},    % Custom highlighting style
+%stringstyle=\color{deepgreen},
+%frame=tb,                         % Any extra options here
+%showstringspaces=false            % 
+    language        = Python,
+    basicstyle      = \ttfamily,
+    keywordstyle    = \color{orange},
+    keywordstyle    = [2] \color{teal}, % just to check that it works
+    stringstyle     = \color{red},
+    commentstyle    = \color{blue}\ttfamily
+}}
+
+
+
+% Python environment
+\lstnewenvironment{python}[1][]
+{
+\pythonstyle
+\lstset{#1}
+}
+{}
+
+% Python for external files
+\newcommand\pythonexternal[2][]{{
+\pythonstyle
+\lstinputlisting[#1]{#2}}}
+
+% Python for inline
+\newcommand\pythoninline[1]{{\pythonstyle\lstinline!#1!}}
+
+% -----------------------------------------------------------------------------------------------------------------
+
 \title{Approximate Regular Expressions: A Comparison of Exact and Approximate Matching Algorithms}
 \subtitle{}  
   \author[Gadriwala, Noshin \& Siddiqui]{Umme Salma Gadriwala, Tasnim Noshin, Rumsha Siddiqui \vspace{0.3cm} \newline \small \{gadriway, noshint, siddiqur\}@mcmaster.ca}
@@ -106,10 +160,22 @@ A Python implementation of Thompson's exact matching algorithm is compared with 
 \begin{textblock}{7.25}(8.25,3.1)
 \begin{block}{Methodology}
 
-explain what doing
+\begin{python}
+  # Sample: compute runtime of exact matching algorithm
+  for i in range(numLength):
+      # Extend the string
+      string = string + "ab"*4
+      start = time.time()
+      for i in range(numIterations):
+          exact_nfa.match(string)    
+      end = time.time()
+      # Compute average time to output
+      exactTimes = exactTimes + [(end-start)/numIterations]
+\end{python}
+
 
 \begin{figure}
-\includegraphics[scale=2]{result_1.PNG}
+\includegraphics[scale=1.9]{result_1.PNG}
 \caption{The time required to match strings of repeating sequences of `ab' to the regular expression `(ab)*', as the legnth of the string increases.}
 \end{figure}
 
@@ -118,9 +184,9 @@ explain what doing
 
 
 \begin{block}{Conclusions \& Future Work}
-final result
+Based on the times computed through the experiment, it is evident that the approximate matching algorithm takes a significant amount of time. It is not worth the cost to use approximate matching for the case where k = 0. It is recommended to implement an exact matching algorithm to perform tasks that require exact matching. 
 
-future:other algos
+In this experiment, only two algorithms were explored. Future research would benefit from exploring the efficiency of a plethora of different methods.
 \end{block}
 
 
