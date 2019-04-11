@@ -32,16 +32,9 @@ app = nfa.approximateNFA("ba")
 
 #print(nfa.pretty_states())
 
-
-##reg = compile("(a|b)a*")
+reg = compile("(a|b)a*")
+print(reg.match("ba"))
 approx = ApproximateNFA("(a|b)a*")
 app = approx.approximateNFA("ba")
-start = app.start
-print("Start: ",start.name)
-end = app.end.name
-print("End: ",end)
-##dictionary = approx.nfaTOdictionary(app)
-#print(dictionary)
-##lengthOfPath = breadth_first_search(dictionary, start)
-path = approx.match(0,"ba")
-#print("BFS on graph:", lengthOfPath)
+print(approx.match(0,"ba"))
+

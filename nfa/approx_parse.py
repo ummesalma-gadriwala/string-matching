@@ -54,7 +54,7 @@ class ApproximateNFA:
                         if char in fromState.transitions.keys():
                             fromState.transitions[char].append(toState)
                         else: fromState.transitions[char] = [toState]
-
+        
         # and states = all states in all NFAs in list
         flatten = lambda l: [item for sublist in l for item in sublist]
         nfaStates = flatten(nfaStates)
