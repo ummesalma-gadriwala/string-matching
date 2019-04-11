@@ -17,6 +17,8 @@
 \usepackage{array}
 \usepackage{booktabs,adjustbox}
 \usepackage{subcaption} 
+\usepackage{amsmath,amsfonts}
+\usepackage{MnSymbol}
 
 
 \usetheme{Berlin}
@@ -132,8 +134,7 @@ A Python implementation of Thompson's exact matching algorithm is compared with 
 
 
 \begin{block}{Background Study}
-\textbf{Exact Matching: Thompson's Algorithm}:
-
+\textbf{Exact Matching: Thompson's Algorithm}: This exact matcing algorithm generates a non-deterministic finite automata (NFA) from a given regular expression. The construction is O(m). The number states and transitions is O(m) as well, where m is the number of symbols \cite{Approx1}.
 
 %\begin{figure}
 %\includegraphics[scale=1.5]{ThompsonsNFA.PNG}
@@ -141,9 +142,7 @@ A Python implementation of Thompson's exact matching algorithm is compared with 
 
 \vspace{5mm} %5mm vertical space
 
-
-
-\textbf{Approximate Matching: Myers and Miller's Algorithm}:
+\textbf{Approximate Matching: Myers and Miller's Algorithm}: An approximate matching algorithms aims to find a match between a regular expression and a string with up to k errors. These k errors can consist of an insertion or deletion (a gap in the alignment of the regular expression and string), or a substitution (a difference in characters at a particular alignment position). The NFAs constructed in this approximate matching method are unique for each string and regular expression combination. The time complexity of Myers and Miller's is O(mn/k + m$2^{k}$ + (n + m) log m), where m and n are the lengths of the regular expession and string respectively. The space complexity is O($2^{k}$m), where k $<$= w, the word size \cite{Approx1}.
 
 
 \begin{figure}
