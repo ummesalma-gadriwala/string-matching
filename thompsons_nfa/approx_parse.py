@@ -89,19 +89,26 @@ class ApproximateNFA:
             string += str(s) + "\n"
 
         return string
-    
+
+    ## @brief The goal is to see if the string matches the regular expression given earlier with at most k errors
+    #  @details The regexp does not need to be passed in because this object has already been given it at initializtion (through init)
+    #  @param k The maximum number of errors
+    #  @param s The string to be matched against the regexp
     def match(self, k, s):
+        # Create an NFA based on the given string
         app = self.approximateNFA(s)
+        # Turn the NFA into a dictionary so that it is easier to work with
         dictionary = self.nfaTOdictionary(app)
-        # perform a BFS on the NFA
+        # Perform a BFS on the NFA to find the optimal shortest path
+            # This is done so that the path/match with the least amount of errors can be found
+            # lengthOfPath is a dictionary: key -> state, value -> distance from root
         lengthOfPath = breadth_first_search(dictionary, app.start)
+        # Get the final state of the NFA
         endState = app.end
-        print(endState)
-        # length of path from start state to end state
+        # Get the length of the found path from the start state to end state
         endStatePathLength = lengthOfPath[endState]
-        print("Path Length:",endStatePathLength)
         
-        # if length of path from start state to end state is <= to k, then return true
+        # If the length of path from start state to end state is <= to k, then return true
         if (endStatePathLength <= k):
             return True
         return False
