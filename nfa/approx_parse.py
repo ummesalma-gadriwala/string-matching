@@ -89,30 +89,53 @@ class ApproximateNFA:
             string += str(s) + "\n"
 
         return string
-
-    ## @brief The goal is to see if the string matches the regular expression given earlier with at most k errors
-    #  @details The regexp does not need to be passed in because this object has already been given it at initializtion (through init)
-    #  @param k The maximum number of errors
-    #  @param s The string to be matched against the regexp
+    
     def match(self, k, s):
-        # Create an NFA based on the given string
         app = self.approximateNFA(s)
-        # Turn the NFA into a dictionary so that it is easier to work with
         dictionary = self.nfaTOdictionary(app)
-        # Perform a BFS on the NFA to find the optimal shortest path
-            # This is done so that the path/match with the least amount of errors can be found
-            # lengthOfPath is a dictionary: key -> state, value -> distance from root
-        lengthOfPath = breadth_first_search(dictionary, app.start)
-        # Get the final state of the NFA
+        # perform a BFS on the NFA
+        #lengthOfPath = breadth_first_search(dictionary, app.start)
+        lengthOfPath = self.dijkstra(dictionary, app.start)
         endState = app.end
-        # Get the length of the found path from the start state to end state
+        print(endState)
+        # length of path from start state to end state
         endStatePathLength = lengthOfPath[endState]
+        print("Path Length:",endStatePathLength)
         
-        # If the length of path from start state to end state is <= to k, then return true
+        # if length of path from start state to end state is <= to k, then return true
         if (endStatePathLength <= k):
             return True
         return False
+
+    def dijkstra(self, graph, root):
+        import math
+        numberOfNodes = len(graph.keys())
+        distances = {}
+        for state in graph:
+            distances[state] = math.inf
+        distances[root] = 0
+        visited = []
         
+        while len(visited) != numberOfNodes:
+            # Pick the node with the smallest value in distances
+            current = min(distances, key=distances.get)
+            # Add the node to visited
+            visited.append(current)
+            # Find the character transitions of the node
+            char, epsilon = graph[current]
+            # Find the shortest distance
+            for neighbour in char:
+                if  (neighbour not in visited) \
+                    and (distances[neighbour] > (distances[current]+1)):
+                    distances[neighbour] = (distances[current]+1)
+            for neighbour in epsilon:
+                if  (neighbour not in visited) \
+                    and (distances[neighbour] > distances[current]):
+                    distances[neighbour] = distances[current]
+                    
+        print("distances",distances)
+        return distances
+    
     def nfaTOdictionary(self, nfa):
         dictionary = {}
 
@@ -121,13 +144,16 @@ class ApproximateNFA:
             dictionary[state] = []
 
             #for all neighbouring states
+            transit = []
             for neighbour in state.transitions:
                 neighbour_state = state.transitions[neighbour]
-                dictionary[state] = dictionary[state] + neighbour_state
+                transit += neighbour_state
+                #dictionary[state] = dictionary[state] + neighbour_state
 
             # also add epsilon transitions
-            dictionary[state] = dictionary[state] + state.epsilon
-        
+            #dictionary[state] = dictionary[state] + state.epsilon
+            dictionary[state] =  [transit, state.epsilon]
+
         return dictionary
         
 def breadth_first_search(graph, root):
@@ -149,3 +175,42 @@ def breadth_first_search(graph, root):
             if neighbour not in marked:
                 queue.add(neighbour)
     return distances
+
+    
+
+
+### Dijkstra###
+def minDistance(self, dist, sptSet):   
+        # Initilaize minimum distance for next node 
+        min = sys.maxint 
+  
+        # Search not nearest vertex not in the  
+        # shortest path tree 
+        for v in range(self.V): 
+            if dist[v] < min and sptSet[v] == False: 
+                min = dist[v] 
+                min_index = v 
+  
+        return min_index
+
+
+# Funtion that implements Dijkstra's single source  
+    # shortest path algorithm for a graph represented  
+    # using adjacency matrix representation 
+def dijkstra(graph, root):
+    queue = []
+    distances = {}
+    for state in graph:
+        distances[state] = math.inf
+        queue.append(state)
+    distances[root] = 0
+
+    while queue != []:
+        current = queue.pop()
+        char, epsilon = graph[current]
+        for state in char:
+            if distances[neighbour] > (distances[current]+1):
+                distances[neighbour] = (distances[current]+1)
+        print("distances",distances)
+        return distances
+
