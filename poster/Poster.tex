@@ -65,7 +65,7 @@ Applications of finding exact and approximate string matches range far and wide.
 \end{block}
 
 \begin{block}{Problem}
- Different applications have different constraints on how strict of a match must be found. Some applications require both exact and approximate matching features. This project explores whether or not an implementation of exact matching can be replaced with one of approximate matching, where the error value for an exact match request would be set to 0. We aim to determine how an approximate matching algorithm fares in efficiency when compared to an exact matching algorithm.  
+ Different applications have different constraints on how strict of a match must be found. Some applications require both exact and approximate matching features. This project explores whether or not an implementation of exact matching can be replaced with one of approximate matching, where the error value for an exact match request would be set to zero. We aim to determine how an approximate matching algorithm fares in efficiency when compared to an exact matching algorithm.  
  %For ex: browser
  	% exact matching: ctrl-f to find text snippet
  	% approx. matching: allow for typos
@@ -73,26 +73,30 @@ Applications of finding exact and approximate string matches range far and wide.
 \end{block}
 
 \begin{block}{Solution}
-Implement algorithm and explore efficiency of Thompson's and Millers and Myers
+A Python implementation of Thompson's exact matching algorithm is compared with that of Myers and Miller's approximate matching algorithm. Matches between string and regular expressions of various legnths are used for testing. The testing methodology compares the time each algorithm takes for the same samples. 
 \end{block}
 
 
 \begin{block}{Background Study}
-\textbf{Exact Matching}:
+\textbf{Exact Matching: Thompson's Algorithm}:
 
-\begin{figure}
-\includegraphics[scale=1.5]{ThompsonsNFA.PNG}
-\end{figure}
+
+%\begin{figure}
+%\includegraphics[scale=1.5]{ThompsonsNFA.PNG}
+%\end{figure}
 
 \vspace{5mm} %5mm vertical space
 
 
 
-\textbf{Approximate Matching}:
+\textbf{Approximate Matching: Myers and Miller's Algorithm}:
 
 
 \begin{figure}
-\includegraphics[scale=2]{MillerAndMyersAlgorithm.PNG}
+\includegraphics[scale=2]{MillerAndMyersAlgorithm.PNG} 
+%\includegraphics[scale=1]{ThompsonsNFA.PNG}
+\hspace*{.2in}
+\raisebox{0.7\height}{\includegraphics[scale=1.2]{ThompsonsNFAcropped.PNG}}
 \end{figure}
 
 \end{block}
