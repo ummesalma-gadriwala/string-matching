@@ -1,6 +1,6 @@
 \documentclass[22pt]{beamer}
 \usepackage{textcomp}
-\usepackage[orientation=portrait, size=custom, width=91.44, height=91.44,scale=1.2]{beamerposter} % 36in*2.5 = 90cm
+\usepackage[orientation=portrait, size=custom, width=91.44, height=91.44,scale=1.3]{beamerposter} % 36in*2.5 = 90cm
 \usepackage[absolute,overlay]{textpos}
 \usepackage{bookmark} %pdflatex says to use this to avoid errors...
 \usepackage{graphicx} %for including images
@@ -42,19 +42,20 @@
 \begin{frame}[fragile]
 
 \begin{textblock}{2}(0.7,1)
-\includegraphics[height=8.5cm]{englogo.png} % We can use CAS logo as well? 
+\includegraphics[height=8.5cm]{englogo.png}
 \end{textblock}
 
 \begin{textblock}{8}(4,1)
 \titlepage
 \end{textblock}
 
-\begin{textblock}{2}(12.7,1)
-\centering
-\textbf{Tweet us} \\
-your thoughts: \\
-{[worth pursuing?] [achievable?]}
-{\color{MacBlue} @TeamDeepCheck \#MacCSCapstone \#MacEng}
+\begin{textblock}{2}(12.7,0.75)
+\includegraphics[height=12cm]{cslogo.png}
+%\centering
+%\textbf{Tweet us} \\
+%your thoughts: \\
+%{[worth pursuing?] [achievable?]}
+%{\color{MacBlue} @TeamDeepCheck \#MacCSCapstone \#MacEng}
 \end{textblock}
 
 \begin{textblock}{7.25}(0.5,3.1)
@@ -78,7 +79,7 @@ Implement algorithm and explore efficiency of Thompson's and Millers and Myers
 \textbf{Exact Matching}:
 
 \begin{figure}
-\includegraphics[scale=1]{ThompsonsNFA.PNG}
+\includegraphics[scale=1.5]{ThompsonsNFA.PNG}
 \end{figure}
 
 \vspace{5mm} %5mm vertical space
@@ -89,7 +90,7 @@ Implement algorithm and explore efficiency of Thompson's and Millers and Myers
 
 
 \begin{figure}
-\includegraphics[scale=1]{MillerAndMyersAlgorithm.PNG}
+\includegraphics[scale=2]{MillerAndMyersAlgorithm.PNG}
 \end{figure}
 
 \end{block}
