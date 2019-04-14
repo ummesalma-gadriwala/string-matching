@@ -37,8 +37,9 @@ class ApproximateNFA:
                 toState = state[t]
                 if (not toState.is_end) and toState.epsilon == []:
                     fromState = nfaStates[i-1][t]
-                    # is it an epsilon transition?
-                    fromState.epsilon.append(toState)
+                    char = s[i-1] 
+                    fromState.transitions[(char, "epsilon")] = [toState]
+                    
                     
         # add substitution edges
         for i in range(1,n+1):
@@ -48,13 +49,15 @@ class ApproximateNFA:
                 toState = currentStates[j]
                 if len(toState.transitions) != 0: 
                     fromStates = previousStates[j].parent
-                    char = s[i-1] #??
+                    char = s[i-1]
                     for fromState in fromStates:
-                        # is it a char transition?
+                        sub = list(toState.transitions.keys())
+                        sub = sub[0][1]
+                        fromState.transitions[(char, sub)] = [toState]
                         # does char already exist in transitions?
-                        if char in fromState.transitions.keys():
-                            fromState.transitions[char].append(toState)
-                        else: fromState.transitions[char] = [toState]
+                        #if char in fromState.transitions.keys():
+                          #  fromState.transitions[char].append(toState)
+                        #else: fromState.transitions[char] = [toState]
         
         # and states = all states in all NFAs in list
         flatten = lambda l: [item for sublist in l for item in sublist]
@@ -107,6 +110,9 @@ class ApproximateNFA:
         if (endStatePathLength <= k):
             return True
         return False
+
+    def cost(self):
+        path = 
 
     def dijkstra(self, graph, root):
         
@@ -167,7 +173,6 @@ class ApproximateNFA:
         return dictionary
         
 def breadth_first_search(graph, root):
-    import math
     distances = {}
     marked = []
     queue = set()
