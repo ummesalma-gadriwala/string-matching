@@ -102,7 +102,7 @@ class State:
         self.name = name
         self.is_end = False
         self.parent = []
-
+        
     def __str__(self):
         pretty_epsilon = ""
         for s in self.epsilon:
@@ -114,7 +114,7 @@ class State:
             
             for s in self.transitions[c]:
                 pretty_transitions += s.name + ", "
-            pretty_transitions = pretty_transitions[:-2] + "]"
+            pretty_transitions = pretty_transitions[:-2] + "]" 
         pretty_parent = ""
         for p in self.parent:
             pretty_parent += p.name + ","
