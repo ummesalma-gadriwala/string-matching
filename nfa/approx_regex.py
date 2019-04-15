@@ -138,39 +138,10 @@ class ApproximateNFA:
                     return True
         return False
     
-def compile(p, debug = False):
-    
-    def print_tokens(tokens):
-        for t in tokens:
-            print(t)
-
-    lexer = Lexer(p)
-    parser = Parser(lexer)
-    tokens = parser.parse()
-
-    handler = Handler()
-    
-    if debug:
-        print_tokens(tokens) 
-
-    nfa_stack = []
-    
-    for t in tokens:
-        handler.handlers[t.name](t, nfa_stack)
-    
-    assert len(nfa_stack) == 1
-    return nfa_stack.pop() 
-
     
 app = ApproximateNFA("(a|b)a*")
-nfa = app.approximateNFA("ab")
-graph = app.nfaTOdictionary(nfa)
-parent, d = breadth_first_search(graph, nfa.start)
 print(app.match(0, "ab"))
 
 
 app = ApproximateNFA("(G|A|T|C)*GC(G|A|T|C)GC(G|A|T|C)*")
-nfa = app.approximateNFA("ATCGCAGCAAAAAA")
-graph = app.nfaTOdictionary(nfa)
-parent, d = breadth_first_search(graph, nfa.start)
 print(app.match(0, "AAAAAGCAGCAAAAA"))
