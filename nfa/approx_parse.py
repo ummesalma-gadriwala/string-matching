@@ -88,9 +88,7 @@ class State:
         pretty_transitions = ""
         for c in self.transitions.keys():
             pretty_transitions += str(c) + " to ["
-            
-            for s in self.transitions[c]:
-                pretty_transitions += s.name + ", "
+            pretty_transitions += self.transitions[c].name
             pretty_transitions = pretty_transitions[:-2] + "]" 
         pretty_parent = ""
         for p in self.parent:
@@ -126,7 +124,7 @@ class Handler:
     def handle_char(self, t, nfa_stack):
         s0 = self.create_state()
         s1 = self.create_state()
-        s0.transitions[("epsilon",t.value)] = [s1]
+        s0.transitions[("epsilon",t.value)] = s1
         s1.parent.append(s0) # add parent
         nfa = NFA(s0, s1)
         nfa.states.add(s0) # add to states
