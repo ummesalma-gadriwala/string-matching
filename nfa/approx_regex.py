@@ -139,9 +139,9 @@ class ApproximateNFA:
         return False
     
     
-app = ApproximateNFA("(a|b)a*")
-print(app.match(0, "ab"))
+##app = ApproximateNFA("(a|b)a*")
+##print(app.match(0, "ab"))
 
 
-app = ApproximateNFA("(G|A|T|C)*GC(G|A|T|C)GC(G|A|T|C)*")
-print(app.match(0, "AAAAAGCAGCAAAAA"))
+##app = ApproximateNFA("(G|A|T|C)*GC(G|A|T|C)GC(G|A|T|C)*")
+##print(app.match(0, "AAAAAGCAGCAAAAA"))

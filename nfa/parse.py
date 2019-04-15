@@ -149,7 +149,7 @@ class NFA:
             for state in current_states:
                 keys = state.transitions.keys()
                 if c in state.transitions.keys():
-                    trans_state = state.transitions[c][0]
+                    trans_state = state.transitions[c]
                     self.addstate(trans_state, next_states)
            
             current_states = next_states
