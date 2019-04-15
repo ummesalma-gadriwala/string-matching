@@ -1,5 +1,4 @@
 from parse import Lexer, Parser, Token, State, NFA, Handler
-from approx_parse import *
 
 def compile(p, debug = False):
     
@@ -25,16 +24,7 @@ def compile(p, debug = False):
     return nfa_stack.pop() 
 
 
-#reg = compile("(a|b)a*")
-#print(reg.match("ba"))
-#nfa = ApproximateNFA("(a|b)a*")
-#app = nfa.approximateNFA("ba")
-
-#print(nfa.pretty_states())
-
-#reg = compile("(a|b)a*")
-#print(reg.match("ba"))
-#approx = ApproximateNFA("(a|b)a*")
-#app = approx.approximateNFA("ba")
-#print(approx.match(0,"ba"))
-
+reg = compile("(a|b)a*")
+print(reg.match("ba"))
+print(reg.match("ab"))
+print(reg.match("baaaaa"))
