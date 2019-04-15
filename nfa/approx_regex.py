@@ -105,21 +105,36 @@ class ApproximateNFA:
         current_states = set()
         self.addstate(app.start, current_states)
         count = 0
+        
+        for x in current_states:
+            for t in x.transitions:
+                if t[0] == t[1] and t[0] == "epsilon": count += 1
+        
         for c in s:
             next_states = set()
+            for i in current_states: print(i)
+            print()
             for state in current_states:
                 for i in state.transitions.keys():
-                    if c == i[0] or c == i[1]:
-                        if i[0] == i[1] and i[0] != "epsilon": count+=1
+##                    if c == i[0] or c == i[1]:
+##                        if i[0] == i[1] and i[0] != "epsilon":
+##                            print("i", i)
+##                            count+=1
                         trans_state = state.transitions[i]
+                        print("trans", trans_state)
                         self.addstate(trans_state, next_states)
+                        for x in next_states:
+                            for t in x.transitions:
+                                if t[0] == t[1] and t[0] == "epsilon": count += 1
             current_states = next_states
-            for i in current_states:
-                print(i)
-            print()
 
+        for i in current_states: print(i)    
+        print("length",len(current_states))
+        
+        for x in current_states:
+            for t in x.transitions:
+                if t[0] == t[1] and t[0] == "epsilon": count += 1
         for s in current_states:
-            print(s, s.is_end)
             if s.is_end:
                 return True, count
         return False, count
@@ -298,10 +313,7 @@ def compile(p, debug = False):
 
     
 app = ApproximateNFA("(a|b)a*")
-nfa = app.approximateNFA("ba")
-print(app.pretty_states())
+nfa = app.approximateNFA("ab")
 graph = app.nfaTOdictionary(nfa)
 parent, d = breadth_first_search(graph, nfa.start)
-print(app.match(0, "ba"))
-#for i in parent:
-  #  print(parent[i].name, i.name, i.is_end)
+print(app.match(0, "ab"))
