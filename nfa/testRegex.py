@@ -373,5 +373,7 @@ class testRegex(unittest.TestCase):
         nfa = compile(r)
         self.assertTrue(nfa.match(s))
 
+        
+
 if __name__ == '__main__':
     unittest.main()
