@@ -25,11 +25,12 @@ class ApproximateNFA:
         nfaStates = []
         for i in range(n+1):
             new = self.makeNFA()
+            new.end.is_end = False
             approxNFA.append(new)
             # Sort in some order to ensure newStates list is in the same order for all nfas
             newStates = sorted(new.states, key=lambda state: state.name) 
             nfaStates.append(newStates)
-            
+        approxNFA[-1].end.is_end = True
         # add deletion edges
         for i in range(1,n+1):
             state = nfaStates[i]
@@ -97,7 +98,6 @@ class ApproximateNFA:
         return string
 
     def addstate(self, state, state_set): # add state + recursively add epsilon transitions
-        print("in add", state)
         if state in state_set:
             return
         state_set.add(state)
@@ -114,14 +114,16 @@ class ApproximateNFA:
             for state in current_states:
                 for i in state.transitions.keys():
                     if c == i[1]:
-                        #print("i",i, state.transitions[i].name)
                         if i[0] == i[1] and i[0] != "epsilon": count+=1
                         trans_state = state.transitions[i]
                         self.addstate(trans_state, next_states)
-                           
             current_states = next_states
+            for i in current_states:
+                print(i)
+            print()
 
         for s in current_states:
+            print(s, s.is_end)
             if s.is_end:
                 return True, count
         return False, count
@@ -300,10 +302,10 @@ def compile(p, debug = False):
 
     
 app = ApproximateNFA("(a|b)a*")
-nfa = app.approximateNFA("ba")
+nfa = app.approximateNFA("ab")
 print(app.pretty_states())
 graph = app.nfaTOdictionary(nfa)
 parent, d = breadth_first_search(graph, nfa.start)
-print(app.match(0, "ba"))
+print(app.match(0, "ab"))
 #for i in parent:
   #  print(parent[i].name, i.name, i.is_end)
