@@ -87,9 +87,7 @@ class State:
         pretty_epsilon = "[" + pretty_epsilon[:-1] + "]"
         pretty_transitions = ""
         for c in self.transitions.keys():
-            pretty_transitions += str(c) + " to ["
-            pretty_transitions += self.transitions[c].name
-            pretty_transitions = pretty_transitions[:-2] + "]" 
+            pretty_transitions += str(c) + " to " + self.transitions[c].name
         pretty_parent = ""
         for p in self.parent:
             pretty_parent += p.name + ","

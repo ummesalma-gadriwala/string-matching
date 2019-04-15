@@ -63,6 +63,7 @@ class ApproximateNFA:
         flatten = lambda l: [item for sublist in l for item in sublist]
         nfaStates = flatten(nfaStates)
         
+        
         # add epsilon start
         for i in range(n+1):
             nfa = approxNFA[i]
@@ -76,6 +77,7 @@ class ApproximateNFA:
             fromStart = approxNFA[i].start
             toStart = approxNFA[i+1].start
             char = s[i]
+            #fromState.epsilon.append(toStart)
             fromStart.transitions[("epsilon", "epsilon")] = toStart
 
         self.states = nfaStates
@@ -93,62 +95,92 @@ class ApproximateNFA:
             string += str(s) + "\n"
 
         return string
-    
-    def match(self, k, s):
-        app = self.approximateNFA(s)
-        dictionary = self.nfaTOdictionary(app)
-        # perform a BFS on the NFA
-        parent, lengthOfPath = breadth_first_search(dictionary, app.start)
-        # create path
-        path = []
-        endState = app.end
-        startState = app.start
-        path.append(endState)
-        state = endState
-        while state != startState:
-            path = [parent[state]] + path
-            state = parent[state]
-            
-        
-        maxScore = self.cost(path)
 
-        # length of path from start state to end state
-        endStatePathLength = lengthOfPath[endState]
-        print("Path Length:",endStatePathLength)
-        
-        # if length of path from start state to end state is <= to k, then return true
-        if (endStatePathLength - maxScore <= k):
-            return True
-        return False
+    def addstate(self, state, state_set): # add state + recursively add epsilon transitions
+        print("in add", state)
+        if state in state_set:
+            return
+        state_set.add(state)
+        for eps in state.epsilon:
+            self.addstate(eps, state_set)
+
+    def match(self, k,s):
+        app = self.approximateNFA(s)
+        current_states = set()
+        self.addstate(app.start, current_states)
+        count = 0
+        for c in s:
+            next_states = set()
+            for state in current_states:
+                for i in state.transitions.keys():
+                    if c == i[1]:
+                        #print("i",i, state.transitions[i].name)
+                        if i[0] == i[1] and i[0] != "epsilon": count+=1
+                        trans_state = state.transitions[i]
+                        self.addstate(trans_state, next_states)
+                           
+            current_states = next_states
+
+        for s in current_states:
+            if s.is_end:
+                return True, count
+        return False, count
+    
+##    def match(self, k, s):
+##        app = self.approximateNFA(s)
+##        dictionary = self.nfaTOdictionary(app)
+##        # perform a BFS on the NFA
+##        parent, lengthOfPath = breadth_first_search(dictionary, app.start)
+##        # run dijkstra on the NFA
+##        parent, lengthOfPath = self.dijkstra(dictionary, app.start)
+##        # create path
+##        path = []
+##        endState = app.end
+##        startState = app.start
+##        path.append(endState)
+##        state = endState
+##        while state != startState:
+##            path = [parent[state]] + path
+##            state = parent[state]
+##        q = ""
+##        for p in path:
+##            q += " " + p.name
+##        print(q[1:])
+##        maxScore = self.cost(path)
+##
+##        # length of path from start state to end state
+##        endStatePathLength = lengthOfPath[endState]
+##        print("Path Length:",endStatePathLength)
+##        
+##        # if length of path from start state to end state is <= to k, then return true
+##        return (endStatePathLength - maxScore <= k)
 
     def cost(self, path):
         p = len(path)
         c = [-math.inf, 0]
-        v0 = State("boundary")
+        v0 = State("v0")
         path = [v0] + path
-        for k in range(1, p+1):
+        for k in range(2, p+1):
             j = 0
 
             vk = path[k]
-            if len(vk.transitions) != 0:
-                vk_name = list(vk.transitions.keys())[0][1]
-            else:
-                vk_name = "epsilon"
-            for i in range(1, k-1):
+            print("current", vk.name)
+            if len(vk.transitions) != 0: vk_name = list(vk.transitions.keys())[0][1]
+            else: vk_name = "epsilon"
+            for i in range(1, k-1+1):
                 vi = path[i]
-                if len(vi.transitions) != 0:
-                    vi_name = list(vi.transitions.keys())[0][1]
-                else:
-                    vi_name = "epsilon"
+                if len(vi.transitions) != 0: vi_name = list(vi.transitions.keys())[0][1]
+                else: vi_name = "epsilon"
                 
                 if vi_name == vk_name:
                     j = i
-
+            print("k", k, "j", j)
             costs = []
             for i in range(j+1, k-1+1):
                 vi = path[i]
+                print(vi.name)
                 for transition in vi.transitions:
-                    if vi[transition] == vk:
+                    if vi.transitions[transition] == vk:
                         cost = 0
                         if transition[0] == transition[1]: cost = 1
                         costs.append(c[i] + cost)
@@ -165,8 +197,10 @@ class ApproximateNFA:
         
         numberOfNodes = len(graph.keys())
         distances = {}
+        parent = {}
         for state in graph:
             distances[state] = math.inf
+            parent[state] = root
         distances[root] = 0
         visited = []
         
@@ -175,23 +209,27 @@ class ApproximateNFA:
             current = self.nextNode(distances, visited)
             # Add the node to visited
             visited.append(current)
-            # Find the character transitions of the node
-            char, epsilon = graph[current]
+            # Find the neighbours of the node
+            neighbours = graph[current]
             # Find the shortest distance
-            for neighbour in char:
-                if  (neighbour not in visited) \
-                    and (distances[neighbour] > (distances[current]+1)):
-                    distances[neighbour] = (distances[current]+1)
-            for neighbour in epsilon:
-                if  (neighbour not in visited) \
-                    and (distances[neighbour] > distances[current]):
-                    distances[neighbour] = distances[current]
+            for neighbour in neighbours:
+                if  (neighbour not in visited):
                     
-        print("distances",distances)
-        return distances
+                    increase = 1
+                    for transition in current.transitions:
+                        if current.transitions[transition] == neighbour:
+                            if transition[0] == transition[1] == 'epsilon': increase = 0
+                            if transition[0] != transition[1]: increase = 2
+                            
+                    if (distances[neighbour] > (distances[current]+increase)):
+                        distances[neighbour] = (distances[current]+increase)
+                        parent[neighbour] = current
+                        
+        return parent, distances
 
     def nextNode(self, distances, visited):
         minimum = math.inf
+        print("d", len(distances))
         for state in distances:
             if distances[state] < minimum and \
                (state not in visited):
@@ -260,12 +298,12 @@ def compile(p, debug = False):
     assert len(nfa_stack) == 1
     return nfa_stack.pop() 
 
-print(compile("(a|b)a*"))
     
 app = ApproximateNFA("(a|b)a*")
 nfa = app.approximateNFA("ba")
+print(app.pretty_states())
 graph = app.nfaTOdictionary(nfa)
 parent, d = breadth_first_search(graph, nfa.start)
-app.match(0, "ba")
+print(app.match(0, "ba"))
 #for i in parent:
   #  print(parent[i].name, i.name, i.is_end)
