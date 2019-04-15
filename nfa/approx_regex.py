@@ -112,8 +112,6 @@ class ApproximateNFA:
         
         for c in s:
             next_states = set()
-            for i in current_states: print(i)
-            print()
             for state in current_states:
                 for i in state.transitions.keys():
 ##                    if c == i[0] or c == i[1]:
@@ -121,23 +119,24 @@ class ApproximateNFA:
 ##                            print("i", i)
 ##                            count+=1
                         trans_state = state.transitions[i]
-                        print("trans", trans_state)
                         self.addstate(trans_state, next_states)
-                        for x in next_states:
-                            for t in x.transitions:
-                                if t[0] == t[1] and t[0] == "epsilon": count += 1
+##                        for x in next_states:
+##                            for t in x.transitions:
+##                                if t[0] == t[1] and t[0] == "epsilon": count += 1
             current_states = next_states
+            for x in current_states:
+                for t in x.transitions:
+                    if t[0] == t[1] and t[0] == "epsilon": count += 1
 
-        for i in current_states: print(i)    
-        print("length",len(current_states))
         
         for x in current_states:
             for t in x.transitions:
                 if t[0] == t[1] and t[0] == "epsilon": count += 1
-        for s in current_states:
-            if s.is_end:
-                return True, count
-        return False, count
+        for x in current_states:
+            if x.is_end:
+                if len(s) - count <= k:
+                    return True
+        return False
     
 ##    def match(self, k, s):
 ##        app = self.approximateNFA(s)
@@ -317,3 +316,10 @@ nfa = app.approximateNFA("ab")
 graph = app.nfaTOdictionary(nfa)
 parent, d = breadth_first_search(graph, nfa.start)
 print(app.match(0, "ab"))
+
+
+app = ApproximateNFA("(G|A|T|C)*GC(G|A|T|C)GC(G|A|T|C)*")
+nfa = app.approximateNFA("ATCGCAGCAAAAAA")
+graph = app.nfaTOdictionary(nfa)
+parent, d = breadth_first_search(graph, nfa.start)
+print(app.match(0, "AAAAAGCAGCAAAAA"))
