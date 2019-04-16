@@ -1,5 +1,5 @@
-## @file testRegex.py
-#  @brief A parsing file for exacxt matching
+## @file parse.py
+#  @brief A parsing file for exact matching
 #  @date 4/15/2019
 
 class Token:
@@ -67,12 +67,14 @@ class Parser:
         self.tokens = []
         self.lookahead = self.lexer.get_token()
 
+    ##@brief Consumes the given token
     def consume(self, name):
         if self.lookahead.name == name:
             self.lookahead = self.lexer.get_token()
         elif self.lookahead.name != name:
             raise ParseError
 
+    ##@brief Parse the regular expression
     def parse(self):
         self.exp()
         return self.tokens
@@ -87,6 +89,8 @@ class Parser:
             self.exp()
             self.tokens.append(t)
 
+    ##@brief Decide which option to choose
+    # @details If the next character is not "|)", add "CONCAT" to teh sequence of tokens
     def term(self):
         self.factor()
         if self.lookahead.value not in ')|':
@@ -235,7 +239,7 @@ class Handler:
         nfa.states = nfa.states.union(n1.states, n2.states) # add to states
         nfa_stack.append(nfa)
 
-    ##@brief Handle an alt ("|") character
+    ##@brief Handle alternate options
     # @details Get the last two nfas from the stack; create a new state and
     #          add epsilon transitions to the start of both nfas; set the new
     #          state to be parent states for both nfas; create a new end state;
@@ -262,7 +266,11 @@ class Handler:
         nfa_stack.append(nfa)
 
     ##@brief Handle repetition
-    # @details Get the last nfa; set the start of 
+    # @details Get the last nfa; create two new states s0 and s1; create an epsilon
+    #          transition from s0 to the start state of the nfa and set s0 as parent
+    #          for the start state; if there is a "*" charracter, add epsilon transition
+    #          from s0 to s1 and set s1 as parent for s0; set the end state of the
+    #          nfa as the parent state for s1 and the start state; Create new nfa.
     def handle_rep(self, t, nfa_stack):
         n1 = nfa_stack.pop()
         s0 = self.create_state()

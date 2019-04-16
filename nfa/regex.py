@@ -1,3 +1,7 @@
+## @file regex.py
+#  @brief Creates an NFA out of regular expression
+#  @date 4/15/2019
+
 from parse import Lexer, Parser, Token, State, NFA, Handler
 
 ##@brief Creates an NFA out of regular expression

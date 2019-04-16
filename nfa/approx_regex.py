@@ -1,12 +1,16 @@
+## @file approx_regex.py
+#  @brief Creates an NFA out of regular expression
+#  @date 4/15/2019
+
 from approx_parse import *
 import math
 
 class ApproximateNFA:
-    # initialize NFA for approximate algorithm with the regular expression
+    ##@brief Initialize NFA for approximate algorithm with the regular expression
     def __init__(self, regex):
         self.regex = regex
 
-    # same as compile
+    ##@brief Creates an NFA out of regular expression
     def makeNFA(self):
         lexer = Lexer(self.regex)
         parser = Parser(lexer)
@@ -20,8 +24,9 @@ class ApproximateNFA:
         assert len(nfa_stack) == 1
         return nfa_stack.pop() 
 
-    # creates n+1 instances of thompsons NFA, connects the instances by
-    # adding insertion, deletion and substitution edges
+    ##@brief Creates an approximate NFA out of given string
+    # @details Creates n+1 (where n = len(string)) instances of thompsons NFA,
+    #          connects the instances by adding insertion, deletion and substitution edges
     def approximateNFA(self, s):
         n = len(s)
         
@@ -97,15 +102,17 @@ class ApproximateNFA:
 
         return string
 
-    def addstate(self, state, state_set): # add state + recursively add epsilon transitions
+    ##@brief Add states
+    # @details Add state and recursively add epsilon transitions   
+    def addstate(self, state, state_set): 
         if state in state_set:
             return
         state_set.add(state)
         for eps in state.epsilon:
             self.addstate(eps, state_set)
 
-    #  If len(s) - count <= k return true
-    # count: counts number of correct alignments when traversing the NFA
+    ##@brief If len(s) - count <= k return true
+    # @details Count is the number of correct alignments when traversing the NFA
     def match(self, k, s):
         app = self.approximateNFA(s)
         current_states = set()
