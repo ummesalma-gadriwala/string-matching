@@ -5,6 +5,7 @@
 #         regex.py
 #  @date 4/11/2019
 from regex import *
+from approx_regex import *
 import time
 import matplotlib.pyplot as plt
 import matplotlib.pylab as pylab
@@ -51,8 +52,8 @@ def main():
     # Plot final results as a line graph
     plt.plot([2 + i*4 for i in range(1,numIterations+1)], exactTimes, color ='g', label = 'exact')
     plt.plot([2 + i*4 for i in range(1,numIterations+1)], approxTimes, color ='orange', label = 'approximate')
-    plt.xlabel('Legnth of String')
-    plt.ylabel('Time to Run Algorithm')
+    plt.xlabel('Number of Characters String')
+    plt.ylabel('Time to Run Algorithm (epoch)')
     plt.legend()
     plt.title('String Matching Efficiences for the Regular Expression "(ab)*"')
     plt.show()
