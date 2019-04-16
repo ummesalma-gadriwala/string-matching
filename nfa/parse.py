@@ -58,7 +58,7 @@ primary  = \( exp \)
          | char              literal {push char}
 '''
 
-##@brief Take a sequence of tokens and build a parse tree using given grammar
+##@brief Parse the regular expression, following the given Grammar
 class Parser:
 
     ##@brief Initialize a lexer with a sequence of tokens
@@ -173,7 +173,7 @@ class NFA:
         return pretty_nfa
         
     ##@brief Given a string match it to the given regular expression
-    # @details True if the given string matches teh regular expression 
+    # @details True if the given string matches the regular expression 
     def match(self,s):
         current_states = set()
         self.addstate(self.start, current_states)
@@ -195,7 +195,7 @@ class NFA:
 ##@brief Handle all the characters while creating the NFA
 class Handler:
 
-    ##@brief Initialize a dictionary where the key is a string and teh value is a method
+    ##@brief Initialize a dictionary where the key is a string and the value is a method
     def __init__(self):
         self.handlers = {'CHAR':self.handle_char, 'CONCAT':self.handle_concat,
                          'ALT':self.handle_alt, 'STAR':self.handle_rep,
@@ -208,7 +208,7 @@ class Handler:
         return State('s' + str(self.state_count))
 
     ##@brief Handle a character
-    # @details Create two new states, add tansition value, parent and add
+    # @details Create two new states, add transition value, parent and add
     #          the states to the NFA
     def handle_char(self, t, nfa_stack):
         s0 = self.create_state()
@@ -262,6 +262,7 @@ class Handler:
         nfa_stack.append(nfa)
 
     ##@brief Handle repetition
+    # @details Get the last nfa; set the start of 
     def handle_rep(self, t, nfa_stack):
         n1 = nfa_stack.pop()
         s0 = self.create_state()
@@ -282,6 +283,9 @@ class Handler:
         nfa_stack.append(nfa)
 
     ##@brief Handle optional
+    # @details Get the last nfa; set the start state of the nfa as the parent of
+    #          of the end state to create an empty transition from start state to
+    #          the end state 
     def handle_qmark(self, t, nfa_stack):
         n1 = nfa_stack.pop()
         n1.start.epsilon.append(n1.end)

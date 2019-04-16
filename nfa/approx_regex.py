@@ -2,9 +2,11 @@ from approx_parse import *
 import math
 
 class ApproximateNFA:
+    # initialize NFA for approximate algorithm with the regular expression
     def __init__(self, regex):
         self.regex = regex
-        
+
+    # same as compile
     def makeNFA(self):
         lexer = Lexer(self.regex)
         parser = Parser(lexer)
@@ -17,7 +19,9 @@ class ApproximateNFA:
     
         assert len(nfa_stack) == 1
         return nfa_stack.pop() 
-        
+
+    # creates n+1 instances of thompsons NFA, connects the instances by
+    # adding insertion, deletion and substitution edges
     def approximateNFA(self, s):
         n = len(s)
         
@@ -100,7 +104,9 @@ class ApproximateNFA:
         for eps in state.epsilon:
             self.addstate(eps, state_set)
 
-    def match(self, k,s):
+    #  If len(s) - count <= k return true
+    # count: counts number of correct alignments when traversing the NFA
+    def match(self, k, s):
         app = self.approximateNFA(s)
         current_states = set()
         self.addstate(app.start, current_states)
@@ -114,15 +120,10 @@ class ApproximateNFA:
             next_states = set()
             for state in current_states:
                 for i in state.transitions.keys():
-##                    if c == i[0] or c == i[1]:
-##                        if i[0] == i[1] and i[0] != "epsilon":
-##                            print("i", i)
-##                            count+=1
+
                         trans_state = state.transitions[i]
                         self.addstate(trans_state, next_states)
-##                        for x in next_states:
-##                            for t in x.transitions:
-##                                if t[0] == t[1] and t[0] == "epsilon": count += 1
+
             current_states = next_states
             for x in current_states:
                 for t in x.transitions:
@@ -139,9 +140,3 @@ class ApproximateNFA:
         return False
     
     
-##app = ApproximateNFA("(a|b)a*")
-##print(app.match(0, "ab"))
-
-
-##app = ApproximateNFA("(G|A|T|C)*GC(G|A|T|C)GC(G|A|T|C)*")
-##print(app.match(0, "AAAAAGCAGCAAAAA"))

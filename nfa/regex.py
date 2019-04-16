@@ -1,30 +1,22 @@
 from parse import Lexer, Parser, Token, State, NFA, Handler
 
-def compile(p, debug = False):
-    
-    def print_tokens(tokens):
-        for t in tokens:
-            print(t)
-
+##@brief Creates an NFA out of regular expression
+def compile(p):
+    #Initialize symbols into a sequence of tokens
     lexer = Lexer(p)
+    #Parse the regular expression 
     parser = Parser(lexer)
+    #Create tokens for each character in p
     tokens = parser.parse()
-
+    #Handles NFA construction
     handler = Handler()
-    
-    if debug:
-        print_tokens(tokens) 
 
     nfa_stack = []
     
     for t in tokens:
         handler.handlers[t.name](t, nfa_stack)
-    
-    assert len(nfa_stack) == 1
+
+    #return an NFA
     return nfa_stack.pop() 
 
 
-reg = compile("(a|b)a*")
-print(reg.match("ba"))
-print(reg.match("ab"))
-print(reg.match("baaaaa"))
