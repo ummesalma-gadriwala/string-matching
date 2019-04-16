@@ -12,8 +12,8 @@ import matplotlib.pylab as pylab
 
 def main():
     # Initialize analytical variables
-    numIterations = 5 # number of times to run algorithm on test case
-    numLength = 5     # max length of string to create test cases out of
+    numIterations = 10 # number of times to run algorithm on test case
+    numLength = 100     # max length of string to create test cases out of
     
     # Create a test case with an alternating sequence of ab
     regexp = "(ab)*"    # the regular expression
@@ -24,6 +24,7 @@ def main():
     exactTimes = []
     approxTimes = []
 
+    start_orig = time.time()
     # Run the algorithms on increasing lengths of the string
     for i in range(numLength):
         # Extend the string
@@ -48,10 +49,11 @@ def main():
         # Compute average time to output
         approxTimes = approxTimes + [(end-start)/numIterations]
 
-
+    end_orig = time.time()
+    print(end_orig - start_orig)
     # Plot final results as a line graph
-    plt.plot([2 + i*4 for i in range(1,numIterations+1)], exactTimes, color ='g', label = 'exact')
-    plt.plot([2 + i*4 for i in range(1,numIterations+1)], approxTimes, color ='orange', label = 'approximate')
+    plt.plot([2 + i*4 for i in range(1,numLength+1)], exactTimes, color ='g', label = 'exact')
+    plt.plot([2 + i*4 for i in range(1,numLength+1)], approxTimes, color ='orange', label = 'approximate')
     plt.xlabel('Number of Characters String')
     plt.ylabel('Time to Run Algorithm (epoch)')
     plt.legend()
