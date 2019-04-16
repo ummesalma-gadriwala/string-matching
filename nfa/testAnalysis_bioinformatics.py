@@ -7,9 +7,6 @@
 from regex import *
 from approx_regex import *
 import time
-import matplotlib.pyplot as plt; plt.rcdefaults()
-import numpy as np
-import matplotlib.pyplot as plt
 
 def main():
     # Initialize analytical variables
