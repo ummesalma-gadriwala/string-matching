@@ -2,16 +2,18 @@
 #  @author Rumsha Siddiqui, siddiqur
 #  @brief Run analytical code to test efficiency of
 #         exact and approximate matching algorithm implementations through
-#         regex.py
+#         regex.py and approx_regex.py
 #  @date 4/11/2019
 from regex import *
+from approx_regex import *
 import time
+import matplotlib.pyplot as plt; plt.rcdefaults()
+import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib.pylab as pylab
 
 def main():
     # Initialize analytical variables
-    numIterations = 5 # number of times to run algorithm on test case
+    numIterations = 100 # number of times to run algorithm on test case
     
     # Create a test case with an alternating sequence of ab
 
@@ -30,8 +32,25 @@ def main():
              #[random test case, BcgI restriction site (cleaves or methylates)]
     # reference info: https://www.neb.com/products/restriction-endonucleases/restriction-endonucleases/types-of-restriction-endonucleases
     # reference: https://www.neb.com/tools-and-resources/selection-charts/alphabetized-list-of-recognition-specificities
-    regexp = ["(ab)*", "CGA(A|G|C|T)(A|G|C|T)(A|G|C|T)(A|G|C|T)(A|G|C|T)(A|G|C|T)TGC"]    # the regular expression
-    strings = ["ab", "CGAAAAAAATGC"]       # the string to perform the match against
+    #regexp = ["(ab)*", "CGA(A|G|C|T)(A|G|C|T)(A|G|C|T)(A|G|C|T)(A|G|C|T)(A|G|C|T)TGC"]    # the regular expression
+    #strings = ["ab", "CGAAAAAAATGC"]       # the string to perform the match against
+
+
+    #BcGI restriction enzyme
+    r1 = "CGA(A|G|C|T)(A|G|C|T)(A|G|C|T)(A|G|C|T)(A|G|C|T)(A|G|C|T)TGC"
+    #BaEI restriction enzyme
+    r2 = "AC(A|G|C|T)(A|G|C|T)(A|G|C|T)(A|G|C|T)GTA(A|G)C"
+    #AbaSI endonuclease
+    r3 = "(A|G|C|T)*C(A|G|C|T)(A|G|C|T)(A|G|C|T)(A|G|C|T)(A|G|C|T)G(A|G|C|T)*"
+    
+    s1 = "CGAAGCTATTGC"
+    s2 = "ACAAAAGTAGC"
+    s3 = "AAACAAAAAGTTTT"
+    s33 = "TCGCTCGCTCGCTCGCTAAACAAAAAGTTTTTCGTCGTCGCTCG"
+
+    regexp = [r1,r2,r3,r3]
+    strings = [s1,s2,s3,s33]
+
     # Create a list to store the resulting time differences for strings of varying length
     exactTimes = []
     approxTimes = []
@@ -41,36 +60,46 @@ def main():
         exact_nfa = compile(regexp[i])
         string = strings[i]
         
-    # Run the EXACT matching algorithm on a single test case multiple times for better computation of time difference
-    start = time.time()
-    for i in range(numIterations):
-        # Run the exact matching algorithm
-        exact_nfa.match(string)    
-    end = time.time()
-    # Compute average time to output
-    exactTimes = exactTimes + [(end-start)/numIterations]
+        # Run the EXACT matching algorithm on a single test case multiple times for better computation of time difference
+        start = time.time()
+        for i in range(numIterations):
+            # Run the exact matching algorithm
+            exact_nfa.match(string)    
+        end = time.time()
+        # Compute average time to output
+        exactTimes = exactTimes + [(end-start)/numIterations]
 
-    # Run the APPROX matching algorithm on a single test case multiple times for better computation of time difference
-    # Create the approx. NFA specific to this string
-    approx_nfa = ApproximateNFA(regexp)        
-    start = time.time()
-    for i in range(numIterations):
-        # Run the approx matching algorithm
-        approx_nfa.match(0,string)    
-    end = time.time()
-    # Compute average time to output
-    approxTimes = approxTimes + [(end-start)/numIterations]
+        # Run the APPROX matching algorithm on a single test case multiple times for better computation of time difference
+        # Create the approx. NFA specific to this string
+        approx_nfa = ApproximateNFA(regexp)        
+        start = time.time()
+        for i in range(numIterations):
+            # Run the approx matching algorithm
+            approx_nfa.match(0,string)    
+        end = time.time()
+        # Compute average time to output
+        approxTimes = approxTimes + [(end-start)/numIterations]
 
 
-    # Plot final results as a line graph
-##    plt.plot([2 + i*4 for i in range(1,numIterations+1)], exactTimes, color ='g', label = 'exact')
-##    plt.plot([2 + i*4 for i in range(1,numIterations+1)], approxTimes, color ='orange', label = 'approximate')
-##    plt.xlabel('Legnth of String')
-##    plt.ylabel('Time to Run Algorithm')
-##    plt.legend()
-##    plt.title('String Matching Efficiences for the Regular Expression "(ab)*"')
+    for i in range(len(exactTimes)):
+        print("e", exactTimes[i])
+
+    
+    for i in range(len(exactTimes)):
+        print("a", approxTimes[i])
+
+        
+    # Plot final results as a bar graph
+    objects = ("[r1,s1]","[r2,s2]","[r3,s3]","[r3,s33]")
+##    y_pos = np.arange(len(objects))
+##    performance = exactTimes
+##     
+##    plt.bar(y_pos, performance, align='center', alpha=0.5)
+##    plt.xticks(y_pos, objects)
+##    plt.ylabel('Time (epoch)')
+##    plt.title('Test Cases')
+##     
 ##    plt.show()
-
 
 
 if __name__ == '__main__':
