@@ -1,4 +1,14 @@
-## Exact vs. Approximate Matching
+## Exact vs. Approximate String Matching
+
+**Goal:** Is it viable to replace existing exact regular expression with approximate matching for search?
+
+**Our conclusion:** No, approximate matching takes twice as much time as exact matching. It is not a viable trade-off.
+
+**Approximate String:**
+A string s satifies a regular expression r with upto k errors. An error is defined as:
+*  Insertion, for r = ab* and s = abc;
+*  Deletion, for r = ab* and s = b;
+*  and Substitution, for r = ab* and s = cb.
 
 To run various test cases of your choice, open nfa/testRough.py, modify the regular expression and strings, and then compile and run the file. 
 
